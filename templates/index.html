@@ -1,0 +1,785 @@
+{% extends 'base.html' %}
+
+{% block title %}Save 2 Serve | Rescue Food, Serve Hope{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .hero {
+        background: var(--bg-gradient), url("{{ url_for('static', filename='images/hero_bg.png') }}") center/cover;
+        background-size: 400% 400%, cover;
+        animation: gradientBG 15s ease infinite;
+        height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 0 2rem;
+    }
+
+    .hero-content h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-content p {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero .btn-large {
+        padding: 1rem 3rem;
+        font-size: 1.25rem;
+        border-radius: 30px;
+        background: white;
+        color: var(--primary-blue);
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        display: inline-block;
+    }
+
+    .hero .btn-large:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        background: var(--light-green);
+        color: white;
+    }
+
+    /* Sections Shared */
+    section {
+        padding: 5rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        color: var(--text-main);
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: '';
+        width: 80px;
+        height: 4px;
+        background: var(--primary-green);
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+
+    /* About Section */
+    .about-content {
+        display: flex;
+        gap: 3rem;
+        align-items: center;
+    }
+
+    .about-text {
+        flex: 1;
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+    }
+
+    .about-image {
+        flex: 1;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .about-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    .about-image:hover img {
+        transform: scale(1.05);
+    }
+
+    /* How It Works */
+    .steps-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .step-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .step-card:hover {
+        transform: translateY(-10px);
+        background: var(--card-border);
+    }
+
+    .step-image-container {
+        width: 100%;
+        height: 160px;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .step-img-animated {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        animation: gentleBob 5s ease-in-out infinite;
+    }
+
+    @keyframes gentleBob {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.15); }
+        100% { transform: scale(1); }
+    }
+
+    .step-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #ffffff;
+    }
+    
+    .step-card p {
+        color: var(--text-secondary);
+    }
+
+    /* Features Section */
+    .features {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        padding: 4rem 2rem;
+        transition: var(--transition);
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .feature-icon {
+        background: rgba(233, 196, 106, 0.1); /* Match new icon color with low opacity */
+        color: var(--light-green); /* Changed to vibrant gold/accent */
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .feature-text h4 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: #ffffff;
+    }
+
+    .feature-text p {
+        color: var(--text-secondary);
+    }
+
+    /* Impact Section */
+    .impact {
+        text-align: center;
+    }
+
+    .stats-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .stat-box {
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        min-width: 200px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    /* Timeline Section */
+    .timeline {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 0;
+    }
+
+    .timeline::after {
+        content: '';
+        position: absolute;
+        width: 4px;
+        background-color: var(--card-border);
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -2px;
+        border-radius: 2px;
+    }
+
+    .timeline-item {
+        padding: 10px 40px;
+        position: relative;
+        background-color: inherit;
+        width: 50%;
+    }
+
+    .timeline-item::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        right: -10px;
+        background-color: var(--light-green);
+        border: 4px solid var(--primary-blue);
+        top: 15px;
+        border-radius: 50%;
+        z-index: 1;
+        box-shadow: 0 0 10px rgba(255, 183, 3, 0.5);
+    }
+
+    .left {
+        left: 0;
+    }
+
+    .right {
+        left: 50%;
+    }
+
+    .left::after {
+        right: -10px;
+    }
+
+    .right::after {
+        left: -10px;
+    }
+
+    .timeline-content {
+        padding: 1.5rem;
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
+        position: relative;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        transition: var(--transition);
+    }
+
+    .timeline-content:hover {
+        transform: translateY(-5px);
+        background: var(--card-border);
+    }
+
+    .timeline-content h3 {
+        color: var(--light-green);
+        margin-bottom: 0.5rem;
+    }
+
+    .timeline-content p {
+        color: var(--text-secondary);
+    }
+
+    /* Contact Form Elements */
+    .form-control-custom {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 2px solid var(--input-border);
+        background: var(--input-bg);
+        color: var(--text-main);
+        outline: none;
+        transition: var(--transition);
+    }
+
+    .form-control-custom:focus {
+        border-color: var(--light-green); /* Gold border on focus */
+        background: rgba(30, 15, 40, 0.8);
+        box-shadow: 0 0 10px rgba(255, 183, 3, 0.2);
+    }
+    
+    .form-control-custom::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Donation Types Section */
+    .donation-types {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 4rem 2rem;
+        margin: 2rem auto;
+        transition: var(--transition);
+    }
+
+    .donation-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    .donation-type-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        transition: var(--transition);
+    }
+
+    .donation-type-card:hover {
+        transform: translateY(-10px);
+        background: var(--card-border);
+    }
+
+    .donation-type-card i {
+        font-size: 3rem;
+        color: var(--light-green);
+        margin-bottom: 1rem;
+    }
+
+    .donation-type-card h3 {
+        color: #fff;
+        margin-bottom: 1rem;
+    }
+
+    .donation-type-card p {
+        color: var(--text-secondary);
+    }
+
+    /* Donation Sectors Section */
+    .sectors {
+        padding: 5rem 2rem;
+    }
+
+    .sector-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2.5rem;
+    }
+
+    .sector-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
+        padding: 3rem 2rem;
+        border-radius: 20px;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .sector-card:hover {
+        transform: scale(1.05);
+        background: var(--card-border);
+        border-color: var(--primary-green);
+        box-shadow: 0 15px 35px rgba(255, 122, 162, 0.2);
+    }
+
+    .sector-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 10px 20px rgba(123, 44, 191, 0.3);
+    }
+
+    .sector-card h3 {
+        color: #fff;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+    }
+
+    .sector-card p {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    /* Success Story Section */
+    .success-story {
+        background: var(--card-bg);
+        backdrop-filter: blur(15px);
+        border-radius: 30px;
+        padding: 5rem 3rem;
+        margin: 4rem auto;
+        display: flex;
+        align-items: center;
+        gap: 4rem;
+        border: 1px solid var(--card-border);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        transition: var(--transition);
+    }
+
+    .story-image {
+        flex: 1;
+        position: relative;
+    }
+
+    .story-image img {
+        width: 100%;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 5px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .story-content {
+        flex: 1.5;
+    }
+
+    .story-content h2 {
+        font-size: 2.8rem;
+        color: #fff;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .story-content p {
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        line-height: 1.8;
+        margin-bottom: 2rem;
+        font-style: italic;
+    }
+
+    .founder-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .founder-info h4 {
+        color: var(--light-green);
+        font-size: 1.4rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .founder-info span {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+        .success-story {
+            flex-direction: column;
+            text-align: center;
+            gap: 2rem;
+            padding: 3rem 2rem;
+        }
+        .founder-info {
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-content h1 { font-size: 2.5rem; }
+        .hero-content p { font-size: 1.2rem; }
+        .about-content { flex-direction: column; }
+        .timeline::after { left: 31px; }
+        .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+        .timeline-item::after { left: 21px; }
+        .right { left: 0; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Rescue Food. Serve Hope.</h1>
+            <p>Every meal rescued is a life nourished. Join a community dedicated to turning food surplus into massive global impact.</p>
+            <a href="{{ url_for('signup') }}" class="btn-large">Start Rescuing Now</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2 class="section-title">Who We Are</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h3 style="margin-bottom: 0.5rem; font-size: 1.8rem; color: var(--light-green);">Let's Share, Let's Care</h3>
+                <p style="font-size: 1.2rem; font-style: italic; margin-bottom: 1.5rem; color: var(--text-main);">"No one should sleep hungry."</p>
+                <p><strong>Save 2 Serve</strong> was born from a simple yet powerful vision: that the surplus food we often overlook can be the lifeline for someone else. We are a community-driven platform connecting generosity with necessity.</p>
+                <br>
+                <h3 style="margin-bottom: 0.5rem; font-size: 1.5rem; color: var(--text-main);">Our Impact Journey</h3>
+                <p>By rescuing food from restaurants, hotels, and households, we ensure that every kilogram of surplus is redirected to provide nutrition and dignity to those who need it most.</p>
+            </div>
+            <div class="about-image">
+                <img src="{{ url_for('static', filename='images/our_mission.jpg') }}" alt="Our Mission: Let's Share, Let's Care">
+            </div>
+        </div>
+    </section>
+
+    <!-- Legacy Timeline Section -->
+    <section id="legacy-timeline">
+        <h2 class="section-title">Our Legacy Timeline</h2>
+        <div class="timeline">
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <h3>2020: The Spark</h3>
+                    <p>Save 2 Serve was founded with a small group of volunteers, believing that small change could make a big difference.</p>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="timeline-content">
+                    <h3>2022: Expanding Horizons</h3>
+                    <p>Reached our first 1,000 active savers and launched our first international food relief program.</p>
+                </div>
+            </div>
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <h3>2024: Technology Integration</h3>
+                    <p>Introduced the smart tracking dashboard, allowing users to transparently monitor their impact in real-time.</p>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="timeline-content">
+                    <h3>2026: Global Movement</h3>
+                    <p>Surpassed 10,000 active savers globally, fundamentally changing how communities approach micro-donations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-image-container">
+                    <img class="step-img-animated" src="{{ url_for('static', filename='images/step1.png') }}" alt="Rescue Food">
+                </div>
+                <h3>1. Rescue</h3>
+                <p>Identify surplus food in your home or business. Log your rescue efforts on your personal dashboard.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-image-container">
+                    <img class="step-img-animated" src="{{ url_for('static', filename='images/step2.png') }}" alt="Donate">
+                </div>
+                <h3>2. Donate</h3>
+                <p>Schedule a drop-off or pickup for your surplus food through our simple donation system.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-image-container">
+                    <img class="step-img-animated" src="{{ url_for('static', filename='images/step3.jpg') }}" alt="Serve food to those in need">
+                </div>
+                <h3>3. Serve</h3>
+                <p>Watch as your rescued food reaches the tables of those in need — children, youngsters, and elders — creating real, visible impact in slum communities.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation Types Section -->
+    <section id="donation-types" class="donation-types">
+        <h2 class="section-title">Types of Food Support</h2>
+        <div class="donation-grid">
+            <div class="donation-type-card">
+                <i class="fas fa-utensils"></i>
+                <h3>Cooked Meals</h3>
+                <p>Providing freshly prepared, nutritious meals to individuals and families facing immediate hunger.</p>
+            </div>
+            <div class="donation-type-card">
+                <i class="fas fa-shopping-basket"></i>
+                <h3>Dry Rations</h3>
+                <p>Essential staples like rice, grains, and lentils that provide long-term food security for households.</p>
+            </div>
+            <div class="donation-type-card">
+                <i class="fas fa-apple-alt"></i>
+                <h3>Fresh Produce</h3>
+                <p>Distributing fruits and vegetables to ensure that those in need have access to vital vitamins and nutrients.</p>
+            </div>
+            <div class="donation-type-card">
+                <i class="fas fa-box-open"></i>
+                <h3>Care Packages</h3>
+                <p>Specially curated boxes containing a mix of food and essential hygiene items for the most vulnerable.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation Sectors Section -->
+    <section id="sectors" class="sectors">
+        <h2 class="section-title">Donation Sectors</h2>
+        <div class="sector-grid">
+            <div class="sector-card">
+                <div class="sector-icon"><i class="fas fa-hotel"></i></div>
+                <h3>Restaurants & Hotels</h3>
+                <p>Hotels and eateries donate surplus high-quality cooked meals to prevent food waste and feed the hungry.</p>
+            </div>
+            <div class="sector-card">
+                <div class="sector-icon"><i class="fas fa-store"></i></div>
+                <h3>Retail & Supermarkets</h3>
+                <p>Supermarkets provide essential grocery staples and packaged goods that are near their sell-by dates.</p>
+            </div>
+            <div class="sector-card">
+                <div class="sector-icon"><i class="fas fa-tractor"></i></div>
+                <h3>Farms & Agriculture</h3>
+                <p>Farmers contribute fresh seasonal harvests, ensuring nutritious produce reaches those in food-insecure areas.</p>
+            </div>
+            <div class="sector-card">
+                <div class="sector-icon"><i class="fas fa-users"></i></div>
+                <h3>Local Communities</h3>
+                <p>Individual households and local groups pool their small savings to sponsor large-scale meal distributions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Story Section -->
+    <section id="success-story" class="success-story">
+        <div class="story-image">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" alt="Founder Archana Sree">
+        </div>
+        <div class="story-content">
+            <h2 class="section-title" style="text-align: left; margin-bottom: 2rem; padding-left: 0;">A Message from our Founder</h2>
+            <p>"I started Save 2 Serve with a single dollar and a vision. I saw how much food was wasted while families in my own neighborhood went hungry. By pooling our micro-savings, we've managed to provide over 100,000 meals this year alone. This isn't just my success story; it's ours."</p>
+            <div class="founder-info">
+                <div>
+                    <h4>Archana Sree</h4>
+                    <span>Founder & Visionary of Save 2 Serve</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Platform Features</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="feature-text">
+                    <h4>Dashboard Tracking</h4>
+                    <p>Monitor your saving habits and donation history with intuitive visual progress bars.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-bell"></i></div>
+                <div class="feature-text">
+                    <h4>Smart Reminders</h4>
+                    <p>Receive gentle notifications to help you stay on track with your saving goals.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <div class="feature-text">
+                    <h4>Secure Donations</h4>
+                    <p>Our simple, integrated donation system ensures your funds safely reach verified causes.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-heart"></i></div>
+                <div class="feature-text">
+                    <h4>Impact Reports</h4>
+                    <p>See exactly where your money goes with transparent progress and impact tracking.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section id="impact" class="impact">
+        <h2 class="section-title">Our Collective Impact</h2>
+        <p style="font-size: 1.2rem; color: var(--text-secondary);">Together, our small savings have achieved incredible things.</p>
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-number">{{ savers }}+</div>
+                <div class="stat-label">Active Savers</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">{{ "{:,.1f}".format(shared_kg) }} kg</div>
+                <div class="stat-label">Food Shared</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">{{ projects }}+</div>
+                <div class="stat-label">Projects Funded</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">{{ impacted }}k</div>
+                <div class="stat-label">Lives Impacted</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact-section" class="contact">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="contact-container" style="display: flex; gap: 2rem; flex-wrap: wrap;">
+            <div class="contact-form" style="flex: 1; min-width: 300px; background: var(--card-bg); padding: 2rem; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid var(--card-border); transition: var(--transition);">
+                <form action="/contact" method="POST">
+                    <div style="margin-bottom: 1rem;">
+                        <input type="text" name="name" class="form-control-custom" placeholder="Your Name" required>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <input type="email" name="email" class="form-control-custom" placeholder="Your Email" required>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <textarea name="message" class="form-control-custom" placeholder="Your Message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem; cursor: pointer; border-radius: 8px; border: none;">Send Message</button>
+                </form>
+            </div>
+            <div class="contact-map" style="flex: 1; min-width: 300px; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <iframe src="https://maps.google.com/maps?q=max%20mall,%20proddutur&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0; min-height: 350px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </section>
+{% endblock %}

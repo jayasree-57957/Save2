@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Save 2 Serve{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #7b2cbf; /* Deep Purple */
+            --light-blue: #9d4edd; /* Light Purple */
+            --primary-green: #ff7aa2; /* Pinkish Red */
+            --light-green: #ffb703; /* Bright Orange/Gold */
+            --dark-bg: rgba(20, 10, 30, 0.8);
+            --text-main: #ffffff;
+            --text-secondary: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --nav-bg: rgba(30, 15, 40, 0.7);
+            --bg-gradient: linear-gradient(-45deg, rgba(60, 9, 108, 0.85), rgba(157, 78, 221, 0.85), rgba(255, 122, 162, 0.85), rgba(255, 158, 0, 0.85));
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --input-border: rgba(255, 255, 255, 0.2);
+            --transition: all 0.3s ease;
+        }
+
+        body.light-mode {
+            --primary-blue: #5a189a;
+            --light-blue: #7b2cbf;
+            --primary-green: #d81159;
+            --light-green: #fb8500;
+            --dark-bg: rgba(248, 249, 250, 0.95);
+            --text-main: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --bg-gradient: linear-gradient(-45deg, #f3e5f5, #e1bee7, #fce4ec, #fff3e0);
+            --input-bg: rgba(0, 0, 0, 0.05);
+            --input-border: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient), url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=1920&q=80') center/cover fixed;
+            background-size: 400% 400%, cover;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background 0.5s ease, color 0.3s ease;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%, center; }
+            50% { background-position: 100% 50%, center; }
+            100% { background-position: 0% 50%, center; }
+        }
+
+        /* Navbar */
+        header {
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--light-green); /* Vibrant gold for the "2" */
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--primary-green), #20b2aa);
+            color: white;
+            box-shadow: 0 4px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(42, 157, 143, 0.4);
+            color: white;
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            max-width: 1200px;
+            margin: 1rem auto 0;
+            padding: 0 2rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-bg);
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 2rem;
+            margin-top: auto;
+            transition: var(--transition);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--light-blue);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 1rem;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg) scale(1.1);
+            background: var(--card-border);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+                width: 100%;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="logo">
+                <i class="fas fa-hand-holding-heart"></i> Save<span>2</span>Serve
+            </a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}#about">About</a></li>
+                <li><a href="{{ url_for('index') }}#how-it-works">How It Works</a></li>
+                <li><a href="{{ url_for('index') }}#impact">Impact</a></li>
+                <li><a href="{{ url_for('support') }}">Support</a></li>
+                <li><a href="{{ url_for('network') }}">Our Network</a></li>
+                {% if session.get('user_id') %}
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('logout') }}" class="btn btn-secondary" style="padding: 0.3rem 1rem;">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('signup') }}" class="btn btn-primary" style="padding: 0.3rem 1rem;">Get Started</a></li>
+                {% endif %}
+                <li>
+                    <button id="theme-toggle" class="theme-toggle" title="Toggle Dark/Light Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <h3>Rescue Food. Serve Hope.</h3>
+            <p>Join our community to make a difference in the world by rescuing food and ending hunger.</p>
+            <div class="footer-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fas fa-envelope"></i> contact@save2serve.com</a>
+            </div>
+            <p>&copy; 2026 Save 2 Serve. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+
+        // Check for saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            body.classList.add('light-mode');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                localStorage.setItem('theme', 'light');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                localStorage.setItem('theme', 'dark');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
