@@ -9,10 +9,11 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev_key_save2serve_123')
 
 # MongoDB configuration
-# Fallback to local MongoDB if no environment variable is provided
-mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
+# Uses MONGO_URI environment variable if set (recommended for production)
+# Falls back to Atlas URI for Render deployment
+mongo_uri = os.environ.get('MONGO_URI', 'mongodb+srv://GITAM:Gitam@123@cluster0.ojbso4h.mongodb.net/Gitamw?appName=Cluster0')
 client = MongoClient(mongo_uri)
-db = client['save2serve']
+db = client['Gitamw']
 users_collection = db['users']
 donations_collection = db['donations']
 rescues_collection = db['rescues']
